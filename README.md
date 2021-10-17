@@ -32,19 +32,29 @@
   * .json: way of programmer invented to save information in file
 
 # 2.3 Babel
-  - JavaScript Compiler that convert lastest code into stable one
-  - Install `@babel/core`
-  	- `npm install --save-dev @babel/core`
-  - Create `babel.config.json`
-  	- `touch babel.config.json`(console)
-	  ```
-    {
-	   "presets": ["@babel/preset-env"]
-	}
-	  ```
-	- `npm install --save-dev @babel/preset-env`
-	
-  
+  - Babel: JavaScript Compiler that convert lastest code into stable one
+  - Nodemon: Watch file changes then restart automatically
+  - Babel Installation
+  	1. Install `@babel/core`
+	 	- `npm install --save-dev @babel/core`
+    2. Create `babel.config.json`
+		- `touch babel.config.json`(console)
+		```
+		{
+		 "presets": ["@babel/preset-env"]
+		}
+		```
+    3. Install `@babel/preset-env`
+		- `npm install --save-dev @babel/preset-env`
+  - Nodemon Installation
+  	1. Install `@babel/node`
+		- `npm i --save-dev @babel/core @babel/node`
+	2. Install `nodemon`
+		- `npm i --save-dev nodemon`
+	3. set script to execute `babel-node`
+		- `"dev": "babel-node index.js"`
+    4. set script to execute `nodemon`
+		- `"dev": "nodemon --exec babel-node index.js`
 
 # Express
   ```
