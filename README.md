@@ -22,6 +22,10 @@
   4. install packages
     - `npm install [PACKAGE_NAME]` || `npm i [PACKAGE_NAME]`
 	- `npm i`: install dependencies automatically
+  5. Create /src folder
+    - put all the code inside in `/src`
+	- make sure script's file path is correct
+	
   * package.json: mange project of nodeJS
     - "main": assign main file of the package
 	- "scripts": help run code easily
@@ -31,7 +35,7 @@
 	  - add `--save-dev` in `npm i`
   * .json: way of programmer invented to save information in file
 
-# 2.3 Babel
+# 2.3 Babel & Nodemon 알아보기
   - Babel: JavaScript Compiler that convert lastest code into stable one
   - Nodemon: Watch file changes then restart automatically
   - Babel Installation
@@ -56,8 +60,41 @@
     4. set script to execute `nodemon`
 		- `"dev": "nodemon --exec babel-node index.js`
 
-# Express
-  ```
-  const express = require("express");
-  const app = express();
-  ```
+# Express로 Server 시작하기
+  - import express and create express application
+    - old JavaScript way:
+	    ```
+		const express = require("express");
+		const app = express();
+		```
+	- latest JavaScript way:
+		```
+		import express from "express";
+		const app = express();
+		```
+  - console.log when server listen to request
+    - set constant PORT
+	  - PORT = "4000";
+	- when PORT was listened, run callback function
+	  - app.listen(PORT, [CALLBACK_FUNC]);
+
+# 3.1 HTTP 방식으로 Request과 Response하기
+  - HTTP Method: the way communcation happens between user(request) and server(response)
+  - Express provides 
+  - When request happened, executed function is assigned two arguments: req, res
+  - Request: the user 'requests' page from the server
+    - GET Request
+	  - `app.get("[ROUTE]", [FUNCTION]);`
+	- 
+  - Response: the server 'responses' and display it to the user
+    - there are many ways to respond
+    - make sure 'return' the response
+	- res's methods:
+      - res.end();
+	    : finish connection instantly
+	  - res.send("[MESSAGE]");
+	    : send text and short amount of HTML
+	  - res.render();
+	  - res.redirect();
+
+# 4.0 Middleware 알아보기
