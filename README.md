@@ -118,3 +118,15 @@
   	- `app.use([CONTROLLER]);`
   - `app.use` is useful when specific middleware is being used globally
   - controllers happen top to bottom, so carefully with the order
+
+# Useful External Middleware Example:
+  - Morgan: request logger middleware
+    - Installation
+      - `npm i morgan`
+	- Usage
+	  - `import morgan from "morgan";`
+	    : import morgan
+	  - `const logger = morgan("dev");`
+	    : configure morgan
+	  - `app.use(logger)`
+	    : morgan as middleware
