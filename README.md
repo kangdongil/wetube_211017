@@ -17,9 +17,11 @@
   3. Initialize Git
   	- `git init`
 	- `git remote add origin [GITHUB_REPOSITORYLINK]`
+	- Create `.gitignore`
+	  - /node_modules
   4. install packages
-    - `npm install` || `npm i`
-  
+    - `npm install [PACKAGE_NAME]` || `npm i [PACKAGE_NAME]`
+	- `npm i`: install dependencies automatically
   * package.json: mange project of nodeJS
     - "main": assign main file of the package
 	- "scripts": help run code easily
@@ -27,4 +29,3 @@
 	- "dependencies": sub packages required to run
   * .json: way of programmer invented to save information in file
   
- # 2.1 
