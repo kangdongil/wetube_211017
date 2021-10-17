@@ -80,15 +80,17 @@
 
 # 3.1 HTTP 방식으로 Request과 Response하기
   - HTTP Method: the way communcation happens between user(request) and server(response)
-  - Express provides 
   - When request happened, executed function is assigned two arguments: req, res
   - Request: the user 'requests' page from the server
     - GET Request
-	  - `app.get("[ROUTE]", [FUNCTION]);`
-	- 
+	  - `app.get("[ROUTE]", [FUNCTIONS]);`
+	- req object has many methods that provides information:
+	  - `req.url`
+	    : what url are being requested
+	
   - Response: the server 'responses' and display it to the user
     - there are many ways to respond
-    - make sure 'return' the response
+    - when 'return' response, it will end the request
 	- res's methods:
       - res.end();
 	    : finish connection instantly
@@ -98,3 +100,15 @@
 	  - res.redirect();
 
 # 4.0 Middleware 알아보기
+  - middleware: software that execute in the middle of request and response
+  - handler = middleware = controller
+  - every controller can be middleware
+  - controller has three arguments: req, res, next
+    - by using `next();`, it will call the next function
+    - run controllers in order by seperating with comma(,)
+	  - `app.get("/", [MIDDLEWARE], [FINALWARE])`
+  - if controller should be used globally, use `app.use`
+  	- `app.use([CONTROLLER]);`
+  - controllers happen top to bottom, so carefully with the order
+  
+  
