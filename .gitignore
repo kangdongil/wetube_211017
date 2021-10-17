@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 # NodeJS
 /node_modules
 
 # Goorm IDE
 goorm.manifest
+=======
+/node_modules
+>>>>>>> c13c3e5905fcaef87bf9b0bb69c88630785292d8
