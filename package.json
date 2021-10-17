@@ -2,15 +2,20 @@
   "name": "wetube_211017",
   "version": "1.0.0",
   "description": "The best way to watch videos.",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kangdongil/wetube_211017.git"
+  },
+  "scripts": {
+    "win": "node index.js"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kangdongil/wetube_211017/issues"
   },
-  "homepage": "https://github.com/kangdongil/wetube_211017#readme"
+  "homepage": "https://github.com/kangdongil/wetube_211017#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
