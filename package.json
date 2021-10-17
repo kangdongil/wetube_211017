@@ -17,5 +17,9 @@
   "homepage": "https://github.com/kangdongil/wetube_211017#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8"
   }
 }

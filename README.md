@@ -26,6 +26,28 @@
     - "main": assign main file of the package
 	- "scripts": help run code easily
 	  - `npm run [SCRIPT_NAME]`
-	- "dependencies": sub packages required to run
+	- "dependencies": sub-packages required to run
+	- "devDependencies": dependencies that developer needs
+	  - add `--save-dev` in `npm i`
   * .json: way of programmer invented to save information in file
+
+# 2.3 Babel
+  - JavaScript Compiler that convert lastest code into stable one
+  - Install `@babel/core`
+  	- `npm install --save-dev @babel/core`
+  - Create `babel.config.json`
+  	- `touch babel.config.json`(console)
+	  ```
+    {
+	   "presets": ["@babel/preset-env"]
+	}
+	  ```
+	- `npm install --save-dev @babel/preset-env`
+	
   
+
+# Express
+  ```
+  const express = require("express");
+  const app = express();
+  ```
