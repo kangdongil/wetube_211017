@@ -94,6 +94,8 @@
 	  - `req.method`
 	    : which method is being selected
 	  - `req.path`
+	  - `req.params`
+	    : return list of parameters
   - Response: the server 'responses' and display it through browser
     - there are many ways to respond
     - To end request, 'return' the response
@@ -106,7 +108,7 @@
 	  - res.render();
 	  - res.redirect();
 
-# 4.0 Middleware 알아보기
+# 3.5 Middleware 알아보기
   - middleware: software that execute in the middle of request and response
   - handler = middleware = controller
   - every controller can be middleware
@@ -119,7 +121,7 @@
   - `app.use` is useful when specific middleware is being used globally
   - controllers happen top to bottom, so carefully with the order
 
-# Useful External Middleware Example:
+# 3.11 Useful External Middleware Example:
   - Morgan: request logger middleware
     - Installation
       - `npm i morgan`
@@ -130,3 +132,121 @@
 	    : configure morgan
 	  - `app.use(logger)`
 	    : morgan as middleware
+		
+# 4.0 Router로 URL 관리하기
+  - router: organize controllers and urls in easier way
+  - router is like a 'mini-application' which provide structure for developer
+  - router group URLs in same category
+  - by using router, you can omit the common part of url
+  - How to create Router:
+    1. initialize Router
+	   - `const [ROUTER_NAME] = express.Router();`
+	2. add URL on Router
+	   - `[ROUTER].get("[URL]", [CONTROLLER]);`
+	3. create Controller for URL
+	   - `const [CONTROLLER_NAME] = (req, res) => res.~();`
+
+  - Modulize Router by way of folders and files
+  	- seperate routers and controllers in folder and files
+	- routers
+	   - create structure(console)
+	      ```
+		  mkdir src/routers
+		  cd src/routers
+		  touch [NAME]Router.js
+		  ```
+	   - import express for each router files
+	     `import express from "express";`
+	   - move code which declare router and url
+	     `const [ROUTER_NAME] = express.Router();`
+		 `[ROUTER].get("[PATH]", [CONTROLLER_NAME]);`
+	   - export router(variable) by `export default`
+	     `export default [VAR_ROUTER];`
+	   - import router to `server.js`
+	     `import [ROUTER_NAME] from "[ROUTER_FILE_PATH]";`
+	- controllers
+	  - create structure(console)
+	      ```
+		  mkdir src/controllers
+		  cd src/controllers
+		  touch [NAME]Controller.js
+		  ```
+	   - import express for each router files
+	     `import express from "express";`
+	   - export each controller(variable)
+	     `export const [CONTROLLER_NAME] = (req, res) => ~;`
+	   - import each controller to each router
+	     `import {CONT, CONT, ...} from "[ROUTER_FILE_PATH]";`
+	   - make sure controller's name is exact from import one
+	- there is no need for `global controller`, because controller are related to specific domain(funtionality)
+
+# 4.1 Router 구상하기(Wetube 예제)
+  1. What kind of data you are going to mainly handle?(what's your project's domain?)
+     - video
+	 - user
+  2. what urls you need based on data(domain)?
+     - / (home) (global router)
+	   - /join
+	   - /login
+	   - /search
+	 - /users (user router)
+	   - /see-user-profile >> /users/:id
+	   - /logout-user >> /users/logout
+	   - /edit-user >> /users/edit
+	   - /delete-user >> /users/delete
+	 - /videos (video router)
+	   - /watch-video >> /videos/watch >> /videos/:id
+	   - /upload-video >> /videos/upload
+	   - /edit-video >> /videos/edit >> /videos/:id/edit
+	   - /delete-video >> /videos/delete >> /videos/:id/delete
+
+  3. Exceptionally, some url adjoin to 'global router' to access more easily
+  
+# 4.5 import & export & export default 알아보기
+  - every nodeJS files has seperate environment
+  	- import packages in each required file is necessary
+  - to import variable from other files, you need to export it first
+  - when export, it's important to specify what variable you're going to export
+  - there are two ways to export:
+    - export default
+	  - export main 'only' variable as default
+	  - `export default [VARIABLE]`
+	  - import [NICKNAME] from "[PATH]";
+	  - if nodeJS package, instead of PATH, you can use PACKAGE_NAME
+	- export
+	  - can export several variables
+	  - prefix `export` in front of variables
+	    `export const [VARIABLE]`
+	  - import {VAR, VAR, ...} from "[PATH]"; 
+	  - when import, variable name should be exact as export one
+
+# 4.7 URL parameter
+  - URL parameter: allow url to include variable by starting with colon(`:`)
+    - ex. `:id`
+	- `:[PARAMS_NAME]`
+  - how to read parameter from url:
+    - `req.params.[PARAMS_NAME]`
+  - When you GET request url contains parameter first than other url, other url will be interrupted because of parameter unless it has conditional(because javascript run top to bottom)
+    - ex.
+	  ```
+	  [ROUTER].get("/:id", ~); << id will intercept value "home"
+	  [ROUTER].get("/home", ~);
+	  ```
+    - make sure parameter-contained url located in bottom to prevent interception
+  - to restrict parameter data type, there are two ways:
+    - built-in Express Route
+	  - `a+`
+	    : many a available
+	  - `a*b`
+	    : any characters is valid between a and b
+	  - `a(bc)?d`
+	    : bc can be omit
+	- Regular Expression
+	  : way to extract information from string
+	  - \\w
+	    : match with any word character
+	  - \\d
+	    : match with any digit(one number)
+      - \\d+
+	    : any number(regardless of size)
+	- to use regular expression on url path, `[PATH](\\[REGEXP])`
