@@ -220,7 +220,7 @@
 	  - import {VAR, VAR, ...} from "[PATH]"; 
 	  - when import, variable name should be exact as export one
 
-# 4.7 URL parameter
+# 4.7 URL parameter 이용해 URL 표현하기
   - URL parameter: allow url to include variable by starting with colon(`:`)
     - ex. `:id`
 	- `:[PARAMS_NAME]`
@@ -250,3 +250,62 @@
       - \\d+
 	    : any number(regardless of size)
 	- to use regular expression on url path, `[PATH](\\[REGEXP])`
+
+# 5.1 Pug를 이용해 HTML Rendering하기
+  - template: 
+  - rendering:
+  - Pug: template engine which help create views by tab-spacing instead of taging(`<~>`)
+  - Installation
+    - `npm i pug`
+	- set pug as view engine
+	  - `app.set("view engine", "pug");` in server.js
+	- create `views` folder
+	  - `mkdir /src/views`
+	- set path for views folder
+	  - `app.set("views", process.cwd() + "/src/views");`
+	  - default path was `process.cwd() + "/views"`
+	  - cwd(current_working_directory) is directory that node starts
+	- delete 'express' record from the header
+	  - `app.disable('x-powered-by');`
+  - How to create view as .pug
+	- create `.pug` file in `view` folder
+	- render `view` from controller
+	  `res.render("[VIEW_FILE]")`
+  - Pug Syntax
+    - write tag without `<>`
+	- pug configure block scope with indentation(just like python)
+	  - because pug is senitive to indent, no need to end block scope
+	- write attribute as inside the parenthesis
+    - `doctype html` << `<!DOCTYPE html>` 
+	- `tag ~` << `<tag> ~ </tag>`
+    - to use javascript code as variable in pug, `#{~}`
+
+# 5.2 Partials & Base 
+  - partial
+    : 
+  	- Initial Setup
+	  - create `partial` folder
+	  :  `mkdir src/views/partials/`
+	  - include partial inside of pug file
+	  :  `include partials/[PARTIAL_NAME].pug`
+  - base
+    : duplicate(inherit) the structure of HTML
+	- `extends [BASE].pug`
+	- `block [NAME]`
+	- if extends, you can fill content inside of blocks
+	- block is a window that input customize stuff
+  - send variable to template
+    - from controller side, render variables after view name
+	  - `res.render("[VIEW_NAME]", {[VAR_NAME]: "[VALUE]", ..})`
+	- variable can be text, object
+	- if the value is only variable, equal(=) it
+	  - `[TAG_NAME]=[VAR]`
+	- if text is mixed state with variable, use `#{[VAR]}`
+
+# 5.7 Conditionals(if)
+	
+
+# 5.6 CSS
+  - makeshift: `MVP.CSS`
+  	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
+	
