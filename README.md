@@ -280,20 +280,35 @@
 	- `tag ~` << `<tag> ~ </tag>`
     - to use javascript code as variable in pug, `#{~}`
 
-# 5.2 Partials & Base 
+# 5.2 Reusable HTML 블록 사용하기(partial & base & mixin)
   - partial
-    : 
+    : reusable fixed html block
   	- Initial Setup
 	  - create `partial` folder
-	  :  `mkdir src/views/partials/`
+	  : `mkdir src/views/partials/`
+	- write partial
+	- use partial
 	  - include partial inside of pug file
-	  :  `include partials/[PARTIAL_NAME].pug`
+	  : `include partials/[PARTIAL_NAME]`
   - base
     : duplicate(inherit) the structure of HTML
-	- `extends [BASE].pug`
+	- `extends [BASE]`
 	- `block [NAME]`
 	- if extends, you can fill content inside of blocks
 	- block is a window that input customize stuff
+  - mixins
+  	: partials that receive data
+	- Initial Setup
+	  - create `mixins` folder
+	  : `mkdir src/views/mixins`
+	- write mixin
+	  - starts with `mixin [MIXIN_NAME]([PARAM])`
+	  - indent first and use [PARAM] to describe structure of mixin
+	- use mixin
+	  - include mixin inside of pug file
+	  : `include mixins/[MIXIN_NAME]`
+	  - with iteration, use item as data for mixin
+	  : `+[MIXIN]([ITEM])`
   - send variable to template
     - from controller side, render variables after view name
 	  - `res.render("[VIEW_NAME]", {[VAR_NAME]: "[VALUE]", ..})`
@@ -302,7 +317,16 @@
 	  - `[TAG_NAME]=[VAR]`
 	- if text is mixed state with variable, use `#{[VAR]}`
 
-# 5.7 Conditionals(if)
+# 5.7 조건(Conditional)과 분기(Iteration) Pug으로 표현하기
+  - conditionals
+  : determine which code should run depend on conditions
+    - `if [CONDITION]`
+	- `else`
+	- `else if [CONDITION]`
+  - iteration
+  : execute code on every element on array
+    - `each [ITEM] in [ITEMS]`
+	- if list of items is null, use `else`
 	
 
 # 5.6 CSS
