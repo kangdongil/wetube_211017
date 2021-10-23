@@ -86,16 +86,25 @@
   - HTTP Method: the way communcation happens between user(request) and server(response)
   - When request happened, executed function is assigned two arguments: req, res
   - Request: the browser 'requests' page from the server
-    - GET Request
-	  - `app.get("[ROUTE]", [FUNCTIONS]);`
-	- req object has many methods that provides information:
-	  - `req.url`
+  	- req object has many methods that provides information:
+	  - `req.url` `req.path`
 	    : what url are being requested
 	  - `req.method`
 	    : which method is being selected
-	  - `req.path`
 	  - `req.params`
 	    : return list of parameters
+	  - `req.body`(required configuration)
+	    : return form's value as javascript object
+    - GET Request
+	  : send information to url explicitly
+	  - `app.get("[ROUTE]", [CONTROLLER]);`
+	- POST Request
+	  : POST used when send file or change state of DataBase
+	  - `app.post("[ROUTE]", [CONTROLLER]);`
+	- Same URL on several requests
+	  - `app.route("[ROUTE]").get([CONT]).post([CONT])`
+	  - when same functionality, name controller,
+	    such as, "getEdit", "postEdit"
   - Response: the server 'responses' and display it through browser
     - there are many ways to respond
     - To end request, 'return' the response
@@ -107,6 +116,7 @@
 	    : send text and short amount of HTML
 	  - res.render();
 	  - res.redirect();
+	    : move on to specific URL
 
 # 3.5 Middleware 알아보기
   - middleware: software that execute in the middle of request and response
@@ -221,6 +231,9 @@
 	  - when import, variable name should be exact as export one
 
 # 4.7 URL parameter 이용해 URL 표현하기
+  - absolute URL & relative URL
+    : add / in front, url will start from root(absolute)
+	: without / in front, url will start from current path(relative)
   - URL parameter: allow url to include variable by starting with colon(`:`)
     - ex. `:id`
 	- `:[PARAMS_NAME]`
@@ -252,8 +265,8 @@
 	- to use regular expression on url path, `[PATH](\\[REGEXP])`
 
 # 5.1 Pug를 이용해 HTML Rendering하기
-  - template: 
-  - rendering:
+  - template: premade HTML content in purpose of integrity of website
+  - rendering: convert HTML,CSS,JavaScript code into graphic figure
   - Pug: template engine which help create views by tab-spacing instead of taging(`<~>`)
   - Installation
     - `npm i pug`
@@ -316,6 +329,7 @@
 	- if the value is only variable, equal(=) it
 	  - `[TAG_NAME]=[VAR]`
 	- if text is mixed state with variable, use `#{[VAR]}`
+	- when variable have to be use in attribute, use backtick then `${VAR}`
 
 # 5.7 조건(Conditional)과 분기(Iteration) Pug으로 표현하기
   - conditionals
@@ -328,7 +342,48 @@
     - `each [ITEM] in [ITEMS]`
 	- if list of items is null, use `else`
 	
+# 6.0 Data를 Back-end로 보내는 원리 이해하기
+  - Preparation `<form>` for sending data to backend
+    - create `<form>`
+	- insert `<input>`
+	- give attribute 'name' to `<input>`
+	- `<input type="submit">` to send request
+  - `<form>`'s attribute related to backend
+    - method: way transmit information between form and back-end
+	  - method default is "GET"
+	  - to send data to backend, method should be "POST"
+	    : `method="POST"`
+	- action: determine which url send data
+  - how to get information from POST request
+    - allow express application to convert form's value to javascript object
+	  - `app.use(express.urlencoded({ extended: true }));`
+	- make sure the position of configuration is in front of routers
+	- get POST request's data
+	  - `req.body`
 
+# MongoDB란,
+  - mongoDB: JSON-like document-based database
+    - [LINK](https://docs.mongodb.com/manual/)
+	- Initialize MongoDb in console
+	  - `mongod` >> `mongo`
+  - mongoose: bridge to help interact mongoDB and javascript
+    - Installation
+	  - `npm i mongoose`
+  - Connect DB to server
+    - create db.js in src folder
+	- import mongoose
+	  - `import mongoose from "mongoose";`
+	- connect mongodb through mongoose
+	  - `mongoose.connect("mongodb://127.0.0.1:27017/wetube");`
+	- create mongoDB event-handler in console
+  	  - DB Connection
+	    `mongoose.connection.once("open", [CALLBACK])`
+	  - DB Error
+	    `mongoose.connection.on("error", [CALLBACK](error))`
+  - mongoDB shell command
+    - `show dbs`
+  
+  
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
