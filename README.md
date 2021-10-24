@@ -122,7 +122,7 @@
 	  - res.redirect();
 	    : move on to specific URL
 
-# 3.5 Middleware 알아보기
+# 3.5 Express Middleware 알아보기
   - middleware: software that execute in the middle of request and response
   - handler = middleware = controller
   - every controller can be middleware
@@ -233,6 +233,8 @@
 	    `export const [VARIABLE]`
 	  - import {VAR, VAR, ...} from "[PATH]"; 
 	  - when import, variable name should be exact as export one
+  - you can do both `export` and `export default`
+    - to import, `import [NICKNAME], { VAR } from "[PATH]";`
 
 # 4.7 URL parameter 이용해 URL 표현하기
   - absolute URL & relative URL
@@ -258,7 +260,7 @@
 	    : any characters is valid between a and b
 	  - `a(bc)?d`
 	    : bc can be omit
-	- Regular Expression
+	- JavaScript Regular Expression
 	  : way to extract information from string
 	  - \\w
 	    : match with any word character
@@ -266,7 +268,16 @@
 	    : match with any digit(one number)
       - \\d+
 	    : any number(regardless of size)
-	- to use regular expression on url path, `[PATH](\\[REGEXP])`
+	- to use regular expression on url path, `[PATH]([REGEXP])`
+	- if you use MongoDB, RegExp should be `hexadecimal 24 numbers`
+	  - `[PATH]([0-9a-f]{24})`
+	- make sure `try / catch ` error to 404 page, if page doesn't exist(when hexadecimal 24 number is valid)
+	  - ```
+	  if (!instance) {
+	    //404 render
+	  }
+	  // successful render
+	  ```
 
 # 5.1 Pug를 이용해 HTML Rendering하기
   - template: premade HTML content in purpose of integrity of website
@@ -403,10 +414,14 @@
 	  : show list of DBs
 	- `use [DB]`
 	  : switch DataBase
+	- `db`
+	  : show current DB name
 	- `show collections`
-	  : 
+	  : show collections of current DB
 	- `db.[COLLECTIONS].find()`
 	  : show instances detail in mongoDB
+	- `db.[COLL].remove({})`
+	  : remove every instances from collection
   * collection: group of instances
 
 # 6.9 MongoDB Model & Schema & Document 알아보기
@@ -453,7 +468,7 @@
 	- Number
 
 
-# 6.13 Mongoose Query 
+# 6.13 Mongoose Query 알아보기
   - import model to controller
   - Mongoose models provide method for CRUD operation(=mongoose query):
   - import the model to controller and use it
@@ -469,13 +484,20 @@
 	   - `await` the mongoose query(make sure controller is `async`)
 	   - use `try / catch` statement to catch error
 	   - when error message needed, `catch(error)`
-	   
+  - by `static`, you can create customize function
+    - `[Schema].static("[STATIC_NAME]", [FUNCTION](input))`
+	- use as `[Model].[STATIC_NAME](input)`
+
   * mongoose query
-    - [Model].find()
+    - [Model].exists({[PROPERTY]});
+    - [Model].find({});
+	- [Model].findById([ID]);
+	- [Model].create({[OBJECT]});
+	- [Model].findByIdAndUpdate([ID], {[OBJECT]});
   * `{}` means everything
 
 
-# 6.16 MongoDB에 Data 업로드하기
+# 6.16 MongoDB에 Data를 Create하기
   - get data from `POST request` to `req.body`
     - VIEW
 	  - `<input name="~" ~>`
@@ -510,6 +532,41 @@
 
   * document: instance of model(doc is like record in SQL)
 
+# 6.22 MongoDB에 Data를 Update하기
+  - `getEdit` should check if instance exist because it has `:id` parameter
+    - check instance exist only
+	  - `const [Instance]Exists = await Video.exists({ _id: id });`
+	  - `if (![Instance]Exists ) { [404] };
+	- when instance is need for next process
+	  - `const [Instance] = await Video.findById([ID]);`
+	  - `if (![Instance]) { [404] }`
+  - get data from `POST request` to `req.body`
+    - VIEW
+	  - `<input name="~" ~>`
+	- ROUTE
+	  - `[ROUTER].route("~").post([CONT])`
+	- CONTROLLER
+	  - `const { ~ } = req.body`
+  - There are two ways to update data,
+  1. import object and change data manually
+     - make sure [Model].save();
+  2. use `[Model].findByIdAndUpdate()`
+     - first, find `id` of updating video
+	 - second, write updated object
+	 
+# 6.23 Mongoose Middleware 알아보기
+  - Middleware: can intercept event to modify document
+  - middleware should be located between schema and model
+  - in middleware, to indicate document is `this` argument
+  - pre("save")
+    - `[Schema].pre("save", async function {
+	~
+	})`
+
+# 6.25 MongoDB에 Data를 Delete하기
+  - `Delete link` inside of template
+  - `Route` and `Controller`
+  - `findByIdAndDelete()`
 
 # 5.6 CSS
   - makeshift: `MVP.CSS`
