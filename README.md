@@ -95,6 +95,8 @@
 	    : return list of parameters
 	  - `req.body`(required configuration)
 	    : return form's value as javascript object
+	  - `req.query`
+	    : return list of query(information after `?`)
     - GET Request
 	  : send information to url explicitly
 	  - `app.get("[ROUTE]", [CONTROLLER]);`
@@ -442,7 +444,7 @@
     - There are two ways to describe [DATATYPE],
       - `{ type: [Datatype] }`
 	  - or just `[Datatype]`
-	- datatype help validate to type wrong information
+	- schema help validate to type wrong information
     - define model and `export default` it
       - `const [Model] = mongoose.model("[Name]", [SCHEMA]);`
 	  - `export default [Model];`
@@ -491,6 +493,7 @@
   * mongoose query
     - [Model].exists({[PROPERTY]});
     - [Model].find({});
+	  - `.sort({[PROPERTY]: asc / desc })`
 	- [Model].findById([ID]);
 	- [Model].create({[OBJECT]});
 	- [Model].findByIdAndUpdate([ID], {[OBJECT]});
@@ -559,14 +562,35 @@
   - middleware should be located between schema and model
   - in middleware, to indicate document is `this` argument
   - pre("save")
-    - `[Schema].pre("save", async function {
-	~
-	})`
+    - `[Schema].pre("save", async function { ~ })`
 
 # 6.25 MongoDB에 Data를 Delete하기
   - `Delete link` inside of template
   - `Route` and `Controller`
   - `findByIdAndDelete()`
+
+# 6.26 MongoDB에 Data를 Search하기
+  - Build up `Search` functionality
+    - search `Route` from globalRouter
+	- search `Controller`
+	  - get data from `req.query`
+	  - render .pug
+	- search `template(.pug)`
+	  - extends base
+	  - <form method="GET"><input name="keyword">
+  - Configure `Search`
+    - `let` empty array
+	  - `let [VARNAME] = []`
+	- if keyword exists
+	  - `if (keyword) { ~ }`
+	- `Video.find([CONDITION])` and save it to array
+	- render array and use it
+  - Use `$regex`(Regular Expression) from MongoDB
+    - `$regex: new RegExp(`^${keyword}`, "i")`
+	- `"i"` means `case-insensitive`
+	- `^` in front means starts-with
+	- `$` at back means ends-with
+	  
 
 # 5.6 CSS
   - makeshift: `MVP.CSS`
