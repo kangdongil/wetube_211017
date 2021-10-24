@@ -108,6 +108,10 @@
   - Response: the server 'responses' and display it through browser
     - there are many ways to respond
     - To end request, 'return' the response
+	- response is not about `return`, but calling the function
+	- when response repeated, error occured.
+      (cannot set header after sent to client)
+	- to prevent this, make sure 'return' it
 	- after 'return' response, after code will be invalid
 	- res's methods:
       - res.end();
@@ -346,7 +350,7 @@
   - Preparation `<form>` for sending data to backend
     - create `<form>`
 	- insert `<input>`
-	- give attribute 'name' to `<input>`
+	- give attribute 'name' to `<input>`(important!)
 	- `<input type="submit">` to send request
   - `<form>`'s attribute related to backend
     - method: way transmit information between form and back-end
@@ -361,7 +365,18 @@
 	- get POST request's data
 	  - `req.body`
 
-# MongoDB란,
+# 6.11 `init.js`로 기능 세분화하기
+  - `server.js` deals with express-stuff, configuration of server
+  - `init.js` deals with initialization of server, db and import stuff(such as model)
+  - preparation
+    - touch `src/init.js`
+	- `export default app;` from server.js
+	- `import app from "./server";`
+    - move `app.listen` and stuff(`PORT`, `CALLBACK`) from `server.js` to `init.js`
+	- change `package.json`'s script `dev` to start from `init.js`
+	  - `"dev": "nodemon --exec babel-node src/init.js"`
+	
+# 6.7 MongoDB 준비하기
   - mongoDB: JSON-like document-based database
     - [LINK](https://docs.mongodb.com/manual/)
 	- Initialize MongoDb in console
@@ -380,10 +395,122 @@
 	    `mongoose.connection.once("open", [CALLBACK])`
 	  - DB Error
 	    `mongoose.connection.on("error", [CALLBACK](error))`
-  - mongoDB shell command
+	- import `db.js` into `init.js`
+	  - `import "./db";`
+  
+  * mongoDB shell command
     - `show dbs`
-  
-  
+	  : show list of DBs
+	- `use [DB]`
+	  : switch DataBase
+	- `show collections`
+	  : 
+	- `db.[COLLECTIONS].find()`
+	  : show instances detail in mongoDB
+  * collection: group of instances
+
+# 6.9 MongoDB Model & Schema & Document 알아보기
+  - ToDoList for DB Configuration
+    - view list of videos
+    - create videos
+    - view video detail
+    - edit video
+    - delete video
+  - Create Model
+    - mkdir src/models
+    - touch [Model].js(capitalized-case)
+    - import mongoose
+      - `import mongoose from "mongoose";`
+    - define the shape of model(=Schema)
+      - `const videoSchema = new mongoose.Schema({~});`
+	  - `{~}`: `{[ENTRY]: [DATATYPE], ~}`
+    - There are two ways to describe [DATATYPE],
+      - `{ type: [Datatype] }`
+	  - or just `[Datatype]`
+	- datatype help validate to type wrong information
+    - define model and `export default` it
+      - `const [Model] = mongoose.model("[Name]", [SCHEMA]);`
+	  - `export default [Model];`
+  - add more `options` to schema(=validation)
+    - when `type` represent as curly bracket(`{}`), you can add more options to define which kind of data is valid specifically
+	- such as, `required: true` or `default: ~` is commonly used
+  - Import Model into `init.js`
+    - `import "./models/Video";`
+	- order of code is important, import "./db" first
+	
+  * model: constructor from Schema definition(allow CRUD operation to schema)
+  * schema: define shape of the model
+  * Schema Types & related options
+    - Any Types
+      - `required: [BOOLEAN]`
+	  - `default: Any or [Function]`
+	  - when javascript code as default, don't execute it `()`
+	- String
+	  - `lowercase / uppercase: [BOOLEAN]`
+	  - `trim: [BOOLEAN]`
+	  - minLength / maxLength
+	  - make sure length-limit is applied on front-end, too.
+	- Number
+
+
+# 6.13 Mongoose Query 
+  - import model to controller
+  - Mongoose models provide method for CRUD operation(=mongoose query):
+  - import the model to controller and use it
+  	- `import [Model] from "../model/[Model]"`
+  - there are two way to execute `mongoose query`
+    1. pass in callback function
+	   - `[Model].[QUERY]([SEARCH_TERM], [CALLBACK])`
+	   - search term: `{}`
+	   - callback have two signatures(attributes), "err" and "docs"
+	   - make sure `render` is inside of callback (to prevent render precede getting result from db)
+	   - you can catch error by `if error exist` statement
+	2. use as promise as `.then()`
+	   - `await` the mongoose query(make sure controller is `async`)
+	   - use `try / catch` statement to catch error
+	   - when error message needed, `catch(error)`
+	   
+  * mongoose query
+    - [Model].find()
+  * `{}` means everything
+
+
+# 6.16 MongoDB에 Data 업로드하기
+  - get data from `POST request` to `req.body`
+    - VIEW
+	  - `<input name="~" ~>`
+	- ROUTE
+	  - `[ROUTER].route("~").post([CONT])`
+	- CONTROLLER
+	  - `const { ~ } = req.body`
+  - There are two ways to upload instance into DB:
+  1. Create JavaScript Object & Updating using `save()`
+	 - create `instance` with `model`
+	   - ```
+	    const [INSTANCE] = new [Model]({
+	    [ENTRY]: [VALUE],
+	    })
+	   ```
+     - when [VALUE] is invalid for [DATATYPE], it will be ignore
+	 - `_id` value will be given when instance created
+	 - send JavaScript object(=instance) to DataBase
+	   - `video.save()`(make sure `async` & `await`)
+     - display DB instance to HTML
+       - search instance from DB
+	   - `const` `Video.find({})` `(async & await)`
+	 - render the instance
+  2. Updating using `[Model].create`
+     - Example:
+	 ```await [Model].create({
+        [ENTRY]: [VALUE],
+        })
+     ```
+     - you can also catch error with `try / catch` statement
+	 - catch has `err` signature, which can be used as `err._message` to paint as HTML string
+
+  * document: instance of model(doc is like record in SQL)
+
+
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
