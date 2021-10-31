@@ -123,6 +123,15 @@
 	  - res.render();
 	  - res.redirect();
 	    : move on to specific URL
+  - Status Code: Browser will refer to status-code to check connection is valid or not
+    - valid status-code is `200`
+	- by assigning adequate status-code, browser can determine which connection is valid or not
+    - How to modify status-code:
+	  - `res.status([CODE]).~`
+	- Status-code Example:
+	  - `200`: OK
+	  - `400`: Bad Request
+	  - `404`: Not Found
 
 # 3.5 Express Middleware 알아보기
   - middleware: software that execute in the middle of request and response
@@ -410,6 +419,7 @@
 	    `mongoose.connection.on("error", [CALLBACK](error))`
 	- import `db.js` into `init.js`
 	  - `import "./db";`
+  - always make sure, `mongod` turned on, so you can access to DataBase
   
   * mongoDB shell command
     - `show dbs`
@@ -461,6 +471,7 @@
     - Any Types
       - `required: [BOOLEAN]`
 	  - `default: Any or [Function]`
+	  - `unique: [BOOLEAN]`
 	  - when javascript code as default, don't execute it `()`
 	- String
 	  - `lowercase / uppercase: [BOOLEAN]`
@@ -491,7 +502,7 @@
 	- use as `[Model].[STATIC_NAME](input)`
 
   * mongoose query
-    - [Model].exists({[PROPERTY]});
+    - [Model].exists({[PROPERTY]: "[VALUE]"});
     - [Model].find({});
 	  - `.sort({[PROPERTY]: asc / desc })`
 	- [Model].findById([ID]);
@@ -591,8 +602,28 @@
 	- `^` in front means starts-with
 	- `$` at back means ends-with
 	  
+# 7.0 User 계정 Create(C)하기
+  - User Model
+  - Router / Controller / Template
+  - User join(C)
+  - Password Hashing
+    - Encrypt Password with hash function
+	- saving raw password is dangerous from hacker
+	- install `node.bcrypt.js`
+	  - `npm i bcrypt`
+	- how to use bcrypt
+	  - `import bcrypt from "bcrypt";`
+	  - `pre("save")` userSchema
+	  - `await bcrypt.hash([plainText], [saltRound]);`
+  - Form Validation
+    - prevent duplication
+	- password confirmation
+	- throw error on template
 
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
-	
+
+# 기타
+  - $or operator
+    - `$or: [{CONDITION}, ...]`

@@ -1,0 +1,15 @@
+extends base
+
+block content
+	if errMsg
+		ul
+			each err in errMsg
+				li=err
+	form(method="POST")
+		input(type="email", required, placeholder="Email", name="email")
+		input(type="text", required, placeholder="Username", name="username")
+		input(type="password", required, placeholder="Password", name="password")
+		input(type="password", required, placeholder="Confirm Password", name="password2")
+		input(type="text", required, placeholder="Name", name="name")
+		input(type="text", required, placeholder="Location", name="location")
+		input(type="submit", value="Join")
