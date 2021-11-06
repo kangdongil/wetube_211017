@@ -603,25 +603,59 @@
 	- `$` at back means ends-with
 	  
 # 7.0 User 계정 Create(C)하기
-  - User Model
-  - Router / Controller / Template
-  - User join(C)
+  - create User Model
+    - username / password / confirm password / ~
+  - Router(get,post)
+  - Template
+    - nav / form:schema / errMsg
+	- link:`/login`
+	  - `Already have an account? Log in Now &rarr;`
+  - Controller: postJoin(C)
+	- `[Model].create`
+	- `res.redirect` to `/login`
   - Password Hashing
-    - Encrypt Password with hash function
-	- saving raw password is dangerous from hacker
+    - Encrypt password with hash function
+	- raw password in DB is vulnerable from hacker
 	- install `node.bcrypt.js`
 	  - `npm i bcrypt`
 	- how to use bcrypt
 	  - `import bcrypt from "bcrypt";`
+	  - `bcrypt.hash([plainText], [saltRounds]);`
+	- hash password with bcrypt
 	  - `pre("save")` userSchema
-	  - `await bcrypt.hash([plainText], [saltRound]);`
+	  - `await bcrypt.hash([plainText], [saltRounds]);`
+	- compare passwords between plain and hashed
+	  - `bcrypt.compare([plainText], [hash]);`
   - Form Validation
+    - when validation failed, send bad request(status-code)
+	  - `res.status(400).~`
     - prevent duplication
-	- password confirmation
-	- throw error on template
+	  - `{ unique : true }` from schema(DB)
+	  - use `try / catch` statement if username already existed
+	  - errMsg: `This username is already taken.`
+	- confirm password
+	  - if `password !== password2(confirm)`
+	  - errMsg: `Password confirmation does not match.`
+
+  * hash-function
+    - same input always same output
+  * saltRounds: how many times the text is being hashed
 
 # 7.5 User 계정 Login하기
-
+  - Router(get,post)
+  - Template
+    - nav / form:schema
+	- link:`/join`
+	  - `Don't have an account? Create one Now &rarr;`
+  - Controller: postLogin
+    - check if account exists
+	  - get data from POST request(`req.body`)
+	  - errMsg: `An account with this username does not exists.`
+	- check if password correct
+	  - `bcrypt.compare` between plainText and hashedText
+	  - errMsg: `Wrong password`
+	- `// configure login session`
+	- `res.redirect` to `/`
 
 # 5.6 CSS
   - makeshift: `MVP.CSS`
