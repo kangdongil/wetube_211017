@@ -17,6 +17,7 @@
   "homepage": "https://github.com/kangdongil/wetube_211017#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "connect-mongo": "^4.6.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "mongoose": "^6.0.12",
@@ -27,6 +28,7 @@
     "@babel/core": "^7.15.8",
     "@babel/node": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
+    "dotenv": "^10.0.0",
     "nodemon": "^2.0.13"
   }
 }

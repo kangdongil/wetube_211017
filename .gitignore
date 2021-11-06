@@ -1,5 +1,6 @@
 # NodeJS
 /node_modules
+.env
 
 # Goorm IDE
 goorm.manifest

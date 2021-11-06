@@ -509,9 +509,13 @@
     - [Model].exists({[PROPERTY]: "[VALUE]"});
     - [Model].find({});
 	  - `.sort({[PROPERTY]: asc / desc })`
+	- [Model.findOne({ ~ });
 	- [Model].findById([ID]);
 	- [Model].create({[OBJECT]});
 	- [Model].findByIdAndUpdate([ID], {[OBJECT]});
+  * mongoose query operator
+    - $or operator
+      - `$or: [{CONDITION}, ...]`
   * `{}` means everything
 
 
@@ -674,11 +678,11 @@
   - Session: memory about activities between server and browser
     - to make session happens, server and browser should have information about session(`session_id`)
   - Cookies: where server put data in browser to remember about user
-    - properties about cookie
-      - secret: do signing the session cookie
-      - domain: where cookie comes from, limited by domain
+    - properties of cookie
+      - secret: string to sign on the session cookie
+      - domain: where cookie comes from, cokkie is limited by domain
       - expires: when cookie will expires
-      - maxAge: how long the cookie is valid
+      - maxAge: how long the cookie is valid(mili-second)
     - cookie only save session ID, session data is stored in server
   - how Session works:
     - HTTP connection is stateless which means each request is independent so that server can't remember the user
@@ -730,10 +734,38 @@
     - every user has different `req.session` object
 	  - because every user has different id
 
+# 7.12 MongoDB에 Session 저장하기
+  - SessionStore: storage where server save sessions
+  - Why session should be saved on DB
+    - server-side session storage is running on memory and it could be easily leak.
+  - configure MongoStore
+    - `npm i connect-mongo`
+	- `import MongoStore from "connect-mongo";`
+	- add store option in session middleware
+	  - `store: MongoStore.create({mongoUrl: "[DB_URL]" })`
+    - configuration successfully, `sessions` collection created
+  - reconfigure session options
+    - give session_id only to logined user
+	  - resave / saveUninitialized : false
+	- modify cookie properties
+	  - add `cookie` in session middlware
+	  : `cookie: {~}`
+
+  * saveUninitalized: forces a session that is uninitialized
+  * uninitialized: session that is new but not modified
+    - if add data on `req.session`, then it's modified(initialized)
+  
+# 7.14 Environment File 설정하기
+  - what Environment File does?
+  	- environment file save string that should be hidden
+  - dotenv: dotenv find variables in `.env` and put inside `process.env`
+  - `.env` file: store string which needs to be hidden
+  - Installation & Usage
+    - `npm i dotenv`
+    - touch & gitignore `/.env`
+    - every key value should be named UPPERCASE
+    - to use env, `process.env.[ENV]`
+  
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
-
-# 기타
-  - $or operator
-    - `$or: [{CONDITION}, ...]`
