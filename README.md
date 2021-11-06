@@ -356,6 +356,10 @@
 	  - `[TAG_NAME]=[VAR]`
 	- if text is mixed state with variable, use `#{[VAR]}`
 	- when variable have to be use in attribute, use backtick then `${VAR}`
+  - send variable to template globally
+    - `res.locals` is being automatically import by pug template
+	- add data to object by `res.locals.[ENTITY] = [VALUE]`
+	- to use locals object `#{[ENTITY]}` or just [ENTITY] as condition
 
 # 5.7 조건(Conditional)과 분기(Iteration) Pug으로 표현하기
   - conditionals
@@ -654,8 +658,77 @@
 	- check if password correct
 	  - `bcrypt.compare` between plainText and hashedText
 	  - errMsg: `Wrong password`
-	- `// configure login session`
+	- `// initialize login session`
 	- `res.redirect` to `/`
+  - Initialize Login Session
+    - add login data to `req.session`
+	  - `req.session.loggedIn`
+	  : whether log in or not
+	  - `req,session.user`
+	  : user data
+	  - use session data on template by `res.locals`
+	    - `if loggedIn`
+		- `res.locals.loggedIn = Boolean(req.session.loggedIn);`
+
+# 7.7 Session과 Cookies 알아보기
+  - Session: memory about activities between server and browser
+    - to make session happens, server and browser should have information about session(`session_id`)
+  - Cookies: where server put data in browser to remember about user
+    - properties about cookie
+      - secret: do signing the session cookie
+      - domain: where cookie comes from, limited by domain
+      - expires: when cookie will expires
+      - maxAge: how long the cookie is valid
+    - cookie only save session ID, session data is stored in server
+  - how Session works:
+    - HTTP connection is stateless which means each request is independent so that server can't remember the user
+	- so when browser first-visited Website, server(express) will give an `session_id` about the user
+	- browser save `session_id` into cookies
+	- when browser request to backend(ex. revisit website), browser attach that `session_id` to the server to identify who is the user
+	- when server validate the user, server will give appropriate response about the user
+  - how to access data about session:
+    - session from browser(session_id in cookie)
+  	  - [chrome inspector] - [application] - [cookies] - connect.sid
+    - sessions from backend(session_objects)
+  	  - `req.sessionStore.all((session))`
+    - session from request
+  	  - check cookies value from `req.headers`
+	  - `req.session.id`
+
+# 7.9 middlewares.js 세분화하기
+  - touch `middlewares.js`
+  - configure middleware and make sure end with `next();`
+  - export const `middleware`
+  - import middleware.js
+    - `import { [MIDDLEWARE] } from "./middlewares";`
+  - use imported middleware
+    - `app.use([MIDDLEWARE]);`
+  
+  * localsMiddleware
+    - `locals.sitename`
+	- `locals.loggedIn`
+
+# 7.10 Express로 Session 구현하기
+  - install & import `express-session`
+    - `npm i express-session`
+    - `import session from "express-session";`
+  - create session
+    - session as middleware `app.use`(before router)
+      - secret
+      - resave / saveUninitialized: true
+  - add properties about session(initialize session)(postLogin)
+    - `req.session.[ENTITY] = [VALUE]`
+	- `.loggedIn`(boolean), `.user`(instance)
+  - use session's data from template(pug)
+    - pug automatically has access to `locals` object
+	- add content to locals object
+	  - `res.locals.[ENTITY] = [VALUE]`
+    - use locals object in pug template
+	  - `#{[ENTITY]}` or just `[ENTITY]` if condition
+
+  * `req.session`
+    - every user has different `req.session` object
+	  - because every user has different id
 
 # 5.6 CSS
   - makeshift: `MVP.CSS`
