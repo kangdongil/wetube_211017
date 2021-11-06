@@ -673,7 +673,7 @@
 	  : user data
 	  - use session data on template by `res.locals`
 	    - `if loggedIn`
-		- `res.locals.loggedIn = Boolean(req.session.loggedIn);`
+		- `res.locals.loggedIn = Boolean(req.session.loggedIn) || {};`
 
 # 7.7 Session과 Cookies 알아보기
   - Session: memory about activities between server and browser
@@ -752,7 +752,7 @@
 	  - add `cookie` in session middlware
 	  : `cookie: {~}`
 
-  * saveUninitalized: forces a session that is uninitialized
+  * saveUninitialized: forces a session that is uninitialized
   * uninitialized: session that is new but not modified
     - if add data on `req.session`, then it's modified(initialized)
 
@@ -880,10 +880,41 @@
 	  - when several scopes, delimit with whitespace
 	  - `read:user`
 	  - `user:email`
-  
+
+# 8.0 User Profile 수정(U)하기
+  - Router(get, post)
+  - Template
+    - nav(if loggedIn)
+	- form(name / email / username / location)
+	- input's value as session(by locals variable)
+  - Protect URLs with middlewares
+    - create protector middlewares
+	  - protectorMiddleware
+	  : next() only logged-in user
+	  : else redirect("/login")
+	  - publicOnlyMiddleware
+	  : next() only not logged-in user(public)
+	  : else redirect("/")
+	- add appropriate middleware in each route
+	  - protectorMiddleware: logout / userEdit / userDelete / upload / videoEdit / videoDelete
+	  - publicOnlyMiddleware: join / login / githubLogin
+	  - `[Router].get([MIDDLEWARE], [CONT]);`
+	  - `[Router].route([ROUTE]).all([MIDDLEWARE]).get~.post~`
+  - Controller: postEdit
+    - Update User data in DB
+	  - `[Model].findByIdAndUpdate([ID], {[updateQuery]})`
+	  - [ID]: req.sessions._id
+	  - [updateQuery]: {username, email, name, location}
+	- Update User data in sessions
+	  - const result from findByIdAndUpdate as updatedUser
+	  - add [optionQuery]: {new: true}
+	  - req.session.user = updatedUser;
+	- Form Validation(code-challenge)
+	  - prevent overlapping unique value
+	
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
 	
-# Json Javascript
-  - JSON.stringify(~)
+# 기타
+  - upload video if loggedIn nav
