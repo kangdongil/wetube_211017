@@ -483,6 +483,7 @@
 	  - minLength / maxLength
 	  - make sure length-limit is applied on front-end, too.
 	- Number
+	- Boolean
 
 
 # 6.13 Mongoose Query 알아보기
@@ -754,7 +755,7 @@
   * saveUninitalized: forces a session that is uninitialized
   * uninitialized: session that is new but not modified
     - if add data on `req.session`, then it's modified(initialized)
-  
+
 # 7.14 Environment File 설정하기
   - what Environment File does?
   	- environment file save string that should be hidden
@@ -765,7 +766,124 @@
     - touch & gitignore `/.env`
     - every key value should be named UPPERCASE
     - to use env, `process.env.[ENV]`
+
+# 7.22 User 계정 Logout하기
+  - Router
+  - Template
+    - nav(if loggedIn)
+  - Controller
+    - req.session.destroy();
+	- `res.redirect` to `/`
+
+# 7.16 OAuth로 GitHub 로그인 구현하기
+  - Create github OAuth App
+    - [Settings] - [Developer settings] - [OAuth Apps]
+	  - create OAuth Apps
+	  - get data needed in OAuth process
+	  : `client_id` / `authorization callback URL` / `client_secret`
+  - Flow of authorizing User with OAuth
+    1. Redirect User to GitHub
+	2. Users are redirected back to our site by GitHub
+	3. App access the API with user's access token
+  - How to redirect User to GitHub:
+    - redirect to `https://github.com/login/oauth/authorize`
+	- add parameters in url to specify what permission is needed
+	- `github login` link on "login" template
+	- create new route(router / controller)
+	  - `/users/github/init`
+	- const github_auth_url as baseUrl
+	  - `https://github.com/login/oauth/authorize`
+	- queries as object(name as config)
+	  - client_id / scope(read:user, user:email)
+	  - set `client_id` as env
+	  - ```
+	  const config = {
+	    [QUERY]: [VALUE],
+		...
+	  }
+	  ```
+	- combine object's items into a string
+	  - const queries = new URLSearchParams(config).toString();
+	- complete url and redirect it
+	  - const authUrl = `${baseUrl}?${queries};`
+      - `res.redirect(authUrl);`
+  - How to fetch Access Token from Code:
+    - code: result from redirection as authorization
+	- const new route(router / controller)
+	  - `/users/github/callback`
+	- combine object's items as URL
+	  - baseUrl: `https://github.com/login/oauth/access_token`
+	  - queries: client_id / client_secret / code
+	  - set `client_id` and`client_secret` as env
+	  - `code` from `req.query.code`
+	  - queries object convert as string
+	  - const `tokenUrl` for complete url
+	- Enable `fetch` from nodeJS
+	  - `npm install node-fetch@2.6.1`
+	  - `import fetch from "node-fetch";`
+	  - to use fetch, `await fetch([URL], [CONFIG])`
+	- fetch Token as json from Code
+	  - const tokenRequest
+	  - [URL]: tokenUrl
+	  - [CONFIG]
+	  - `method: "POST"`
+	  - `headers: {Accept: "application/json"}`
+	  - await ([FETCH]).json();
+  - How to get `User`&`Email` data with Access Token:
+    - check if access token is valid
+	  - `if ("access_token" in tokenRequest)`
+      - if not, redirect to `/login`
+	  // To-Do: error notification
+    - get access token from json(tokenRequest)
+	  - `const { access_token } = tokenRequest;`
+	- const `apiUrl`
+	  - `const apiUrl = "https://api.github.com"`
+	- fetch User data from GitHub API
+	  - const userData
+	  - [URL]: `${apiUrl}/user`
+	  - [CONFIG]
+	  - headers: {Authorization: `token ${access_token}`}
+	  - await ([FETCH]).json();
+	- fetch Email data from GitHub API
+	  - const emailData
+	  - [URL]: `${apiUrl}/user/emails`
+	  - [CONFIG]
+	  - headers: {Authorization: `token ${access_token}`}
+	  - await ([FETCH]).json();
+	- filter and select(find) primary and verified email
+	- redirect to `/login` if github email is not verified
+	  - notification
+	- if email is verified, `initialize session`(login) and redirect to `/`
+  - Suggestions for Overlapping Problem of Login Methods
+	- add new entity to UserSchema
+	  - Boolean `noPasswordAccount`, default=false
+    - Case 1: Local Login - locally joined, not github user
+	  - when login with username and password,
+	  `findOne` user that `noPasswordAccount` is false
+	- Case 2: GitHub Login - locally joined, github user has same email as local
+	  - find user that has same github user's email
+	  - just initialize session
+	- Case 3: GitHub Login - never locally joined
+	  - if `!user`, create User instance using GitHub data
+	  - `userData.~`, `emailData[verified].~`
+	  - noPasswordAccount: true, password: ""
+  
+  * OAuth URL Parameters
+    - `client_id` (from OAuth App)
+	  - identify github what application is being logined
+	- `client_secret`
+	  - this generated from OAuth App
+	- `allow_signup`
+	  - when user don't have github account, allow sign up
+	- `scope`
+	: permit information you want to get about user
+	  - when several scopes, delimit with whitespace
+	  - `read:user`
+	  - `user:email`
   
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
+	
+# Json Javascript
+  - JSON.stringify(~)

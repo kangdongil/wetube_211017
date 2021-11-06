@@ -1,4 +1,5 @@
 import User from "../models/User";
+import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) => {
@@ -46,7 +47,7 @@ export const getLogin = (req, res) => res.render("login", {
 });
 export const postLogin = async (req, res) => {
 	const { username, password } = req.body;
-	const user = await User.findOne({ username });
+	const user = await User.findOne({ username, noPasswordAccount: false });
 	const errMsg = [];
 	try {
 		if (!user) {
@@ -67,5 +68,83 @@ export const postLogin = async (req, res) => {
 	req.session.user = user;
 	return res.redirect("/");
 };
-export const logout = (req, res) => res.send("Log out");
+export const initGithubLogin = (req, res) => {
+	const baseUrl = "https://github.com/login/oauth/authorize";
+	const config = {
+		client_id: process.env.GH_CLIENT,
+		allow_signup: false,
+		scope: "read:user user:email"
+	};
+	const params = new URLSearchParams(config).toString();
+	const authUrl = `${baseUrl}?${params}`;
+	return res.redirect(authUrl);
+};
+
+export const callbackGithubLogin = async (req, res) => {
+	const baseUrl = "https://github.com/login/oauth/access_token"
+	const config = {
+		client_id: process.env.GH_CLIENT,
+		client_secret: process.env.GH_SECRET,
+		code: req.query.code
+	}
+	const params = new URLSearchParams(config).toString();
+	const tokenUrl = `${baseUrl}?${params}`;
+	const tokenRequest = await (
+		await fetch(tokenUrl, {
+			method: "POST",
+			headers: {
+				Accept: "application/json"
+			}
+		})
+	).json();
+	if ("access_token" in tokenRequest) {
+		const { access_token } = tokenRequest;
+		const apiUrl = "https://api.github.com";
+		const userData = await (
+			await fetch(`${apiUrl}/user`, {
+				headers: {
+					Authorization: `token ${access_token}`
+				}
+			})
+		).json();
+		const emailData = await (
+			await fetch(`${apiUrl}/user/emails`, {
+				headers: {
+					Authorization: `token ${access_token}`
+				}
+			})
+		).json();
+		const emailObj = emailData.find(
+			(email) => email.primary === true && email.verified === true
+		);
+		if(!emailObj) {
+			return res.redirect("/login");
+			// To-Do: no verified github email
+		}
+		
+		let user = await User.findOne({ email : emailObj.email });
+		if (!user) {
+			const user = await User.create({
+				avatarUrl: userData.avatar_url,
+				name: userData.name ? userData.name : "",
+				username: userData.login,
+				email: emailObj.email,
+				password: "",
+				noPasswordAcount: true,
+				location: userData.location,
+			});
+		}
+		req.session.loggedIn = true;
+		req.session.user = user;
+		return res.redirect("/");
+	} else {
+		return res.redirect("/login");
+		// To-Do: No verified Access-Token available
+	}
+};
+
+export const logout = (req, res) => {
+	req.session.destroy();
+	return res.redirect("/");	
+};
 export const see = (req, res) => res.send("See User Profile");
