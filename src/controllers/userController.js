@@ -46,7 +46,7 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
 	const { _id, avatarUrl, email: sessionEmail, username: sessionUsername } = req.session.user;
 	const { name, email, username, location } = req.body;
-	const { file } = req;
+	const file = req.file;
 	let searchParams = [];
 	if (sessionEmail !== email) {
 		searchParams.push({ email });

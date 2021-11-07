@@ -955,11 +955,11 @@
 	  - `enctype="multipart/form-data` as form attrib
 	- configurate multer as middleware
 	  - `import multer from "multer";`
-	  - const uploadFiles = `multer({ dest: "uploads/" });`
+	  - const avatarUpload = `multer({ dest: "uploads/" });`
 	- run middleware on Router before postController
-	  - import `uploadFiles` middleware
+	  - import `avatarUpload` middleware
 	  - `~.post([MIDDLEWARE], [CONT]);`
-	  - uploadFiles.single("INPUT's name")
+	  - avatarUpload.single("INPUT's name")
   - save avatar image
     - const `req.file`
 	- only change avatar when file is not undefined
@@ -980,11 +980,28 @@
 	- name file randomly(for uniqueness)
 	- postEdit get file information from `req.file`
 	- get fileUrl from `req.file.path`
+  * multer options
+    - dest
+	- limits
+	  - fileSize(bytes)
+
+# 8.9 Video 파일 올리기
+  - Middleware
+    - configure multer
+    - avatarUpload / videoUpload
+  - Video Model
+    - fileUrl
+	  - type: string, required
+  - Controller: postUpload
+    - const video file name as fileUrl from `req.file`
+	- add `fileUrl` in Video.create
+  - Template("upload")
+	- label for === input id
+	- input type="file", accept="video/*"
+  - Template("watch")
+    - show it as video tag
+	  - `video(src=video.fileUrl, controls)`
 
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
-	
-# 기타
-  - upload video if loggedIn nav
-  - structure `/views`
