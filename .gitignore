@@ -1,5 +1,6 @@
 # NodeJS
 /node_modules
+/uploads
 .env
 
 # Goorm IDE

@@ -939,7 +939,48 @@
 	  - `await user.save();`
 	  - if save(), password will be hashed due to pre.save()
 	- redirect to `/logout`
-	
+
+# 8.6 Images 파일 올리기
+  - Router(get, post)
+    - protectorMiddleware
+  - Template("edit-profile")
+    - add avatar's label and input
+		- label for === input id
+		- input type="file", accept="image/*"
+  - manage upload with `multer`
+    - mkdir & gitignore `/uploads`
+    - install Multer
+      - `npm i multer`
+	- change encode type of form
+	  - `enctype="multipart/form-data` as form attrib
+	- configurate multer as middleware
+	  - `import multer from "multer";`
+	  - const uploadFiles = `multer({ dest: "uploads/" });`
+	- run middleware on Router before postController
+	  - import `uploadFiles` middleware
+	  - `~.post([MIDDLEWARE], [CONT]);`
+	  - uploadFiles.single("INPUT's name")
+  - save avatar image
+    - const `req.file`
+	- only change avatar when file is not undefined
+	  - `avatarUrl: file ? file.path : avatarUrl `
+  - show avatar in template
+    - expose `/uploads` folder to browser(static file serving)
+	  - `app.use("/uploads", express.static("uploads"));`
+    - show it as img tag
+	  - `img(src=~, width=100, height=100)`
+	  - src: `loggedInUser.noPasswordAccount ? "" : "/"`
+
+  * Reason why use avatar as url not file
+	- DB contains only string, save file in harddrive
+	- never upload file in DB, use save file path
+  * multer: packages that manage files upload
+    - get file from input
+	- save file in `dest`
+	- name file randomly(for uniqueness)
+	- postEdit get file information from `req.file`
+	- get fileUrl from `req.file.path`
+
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
