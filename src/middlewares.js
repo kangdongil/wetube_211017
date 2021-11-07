@@ -11,7 +11,7 @@ export const protectorMiddleware = (req, res, next) => {
 	} else {
 		return res.redirect("/login");
 	}
-}
+};
 
 export const publicOnlyMiddleware = (req, res, next) => {
 	if(!req.session.loggedIn) {
@@ -19,4 +19,4 @@ export const publicOnlyMiddleware = (req, res, next) => {
 	} else {
 		return res.redirect("/");
 	}
-}
+};

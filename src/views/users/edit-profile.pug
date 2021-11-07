@@ -1,4 +1,4 @@
-extends base
+extends ../base
 
 block content
 	h4 Edit Profile
@@ -8,3 +8,6 @@ block content
 		input(type="text", name="name", placeholder="Name", value=loggedInUser.name)
 		input(type="text", required, name="location", placeholder="Location", value=loggedInUser.location)
 		input(type="submit", value="Update Profile")
+		if !loggedInUser.noPasswordAccount
+			hr
+			a(href="edit/password") Change Password &rarr;

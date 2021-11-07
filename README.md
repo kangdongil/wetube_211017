@@ -911,6 +911,34 @@
 	  - req.session.user = updatedUser;
 	- Form Validation(code-challenge)
 	  - prevent overlapping unique value
+
+# 8.4 Views 폴더 Structure 만들기
+  - categorize `views/[CATEGORY]/[PUG]`
+  - change `res.render`'s `template link` in controller
+  - `extends ../base` for categorized pug files
+
+# 8.5 Change Password 구현하기
+  - Template
+    - link(`change-password`) in "edit-profile"
+	- form(old password / new password / new password confirmation) ; `type: password`
+  - Router(get, post)
+    - `.all(protectorMiddleware)`
+  - Controller: postChangePassword
+    - redirect to `/` when noPasswordAccount(session)
+	- bring data from form and session
+	  - form: oldPassword, newPassword, newPasswordConfirmation
+	  - session: _id
+	- find User with old Password
+	  - const user = `await User.findById(_id)`
+	  - await bcrypt.compare(oldPassword, user.password)
+	- Form Validation
+	  - if oldpassword is not correct
+	  - if newpassword and its confirmation doesn't match
+	- Replace password with new one and save();
+	  - `user.password = newPassword`
+	  - `await user.save();`
+	  - if save(), password will be hashed due to pre.save()
+	- redirect to `/logout`
 	
 # 5.6 CSS
   - makeshift: `MVP.CSS`
@@ -918,3 +946,4 @@
 	
 # 기타
   - upload video if loggedIn nav
+  - structure `/views`
