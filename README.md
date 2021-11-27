@@ -1002,6 +1002,49 @@
     - show it as video tag
 	  - `video(src=video.fileUrl, controls)`
 
+# 8.12 Model Relationship 알아보기
+  - 
+ 
+# 8.10 User Profile 만들기
+  - Router(/:id([0-9a-f]{24})
+  - Template
+    - nav(My Profile)
+  - Controller: see
+    - const id from `req.params`
+    - find User by Id
+	  - `const user = await User.findById(id);`
+	- if no user, render 404
+	- send variables
+	  - user object
+	  - pageTitle: user.name
+  - add owner into video
+  - owner
+    - model
+	  - type: `mongoose.Schema.Types.ObjectId`
+	  - ref: `"User"`
+	- controller; postUpload
+	  - owner: _id
+	- controller: watch
+	  - const owner = findById
+	  - send variable owner
+	- Template: "watch"
+	  - owner name
+	  - edit delete btn if owner
+  - use ref
+    - Video.findById(id).populate("owner")
+	  - change user_id into whole user object
+  - see videos related to user
+    - const videos = await Video.find({ owner: user._id })
+	- send variable videos
+	- use mixins video
+  - Mongoose Relationship
+    - .populate([REL])
+  - owner [VIDEOS]
+  - hash bug
+    - if (this.isModified("password"))
+  - edit, delete form only for owner
+  
+
 # 5.6 CSS
   - makeshift: `MVP.CSS`
   	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
