@@ -1003,8 +1003,31 @@
 	  - `video(src=video.fileUrl, controls)`
 
 # 8.12 Model Relationship 알아보기
-  - 
- 
+  - Set Owner of Video
+	  - use `objectId` as Entry type(model)
+		- `mongoose.Schema.Types.ObjectId`
+		- `ref: "User"`
+	  - set relationship when create document(controller)
+		- `const { user: { &#95_id }} = req.sessions;`
+		- `owner: _id`
+	  - show data about owner
+		- Manually: findById video, findById with `video.owner`
+		- Use Populate: `.findById(id).populate("owner");` 
+	  - show something for only owner(template)
+		- if String(video.owner._id) === String(loggedInUser._id)
+	  - show videos related to owner
+		- findById `user`, find `owner: user._id`
+  - Load Videos of Owner
+  	- add entry about videos(model)
+  	  - [{~}]
+	  - `mongoose.Schema.Types.ObjectId`
+	  - `ref: "Video"`
+	- populate videos of user(controller)
+	  - `User.findById(id).populate("videos")`
+	- show video list(template)
+	  - `each vide in user.videos`
+	
+  * .populate(): fill data about object which has relation
 # 8.10 User Profile 만들기
   - Router(/:id([0-9a-f]{24})
   - Template
@@ -1044,6 +1067,90 @@
     - if (this.isModified("password"))
   - edit, delete form only for owner
   
+# 9.0 Introduction to WebPack
+  - WebPack: convert classy front-end code into compatible js
+  - Mostly webpack configuration is already been done by JS frameworks and libraries
+  - WebPack processes almost everythihng: .js / css / images
+
+# 9.1 WebPack Configuration & Babel Loader
+  - installation
+    - `npm i webpack webpack-cli -D`
+    - touch `webpack.config.js`
+	- `(script)` `assets: webpack (--config webpack.config.js)`
+    - src/client: folder that store code which executed by browser(not by server)
+	- src/assets(auto-created): folder that store proccessed codes
+  - `webpack.config.js`
+    - mode: define shape of output depending on development or production
+	  - `mode: "development"`
+    - entry: source codes that need to be processed
+    - output: destination for processed files
+	  - output.filename
+	  - output.path(absolute)
+	  - const path = require("path")
+	  - path: path.resolve(__dirname, "assets", "js")
+	- syntax
+	```
+	module.exports = {~}
+  - connect babel-loader
+	- `npm i babel-loader -D`
+  - module.rules: apply modification to certain file extension
+    - module.rules: [{[JS]}, {[SCC]}, ...]
+    - test: the file extension that rule applied
+	  - `test: /\[.EXT]$/`
+	- use: modification of file
+    - .js with babel-loader
+	  - test: /\.js$/
+	  - use.loader: "babel-loader"
+	  - use.options: `prests: [["@babel.preset-env", { targets: "defaults"}]]`
+  - apply assets into front-end
+    - `app.use("/assets", express.static("assets"));`(server)
+	- `script(src="/assets/js/main.js")`(base.pug)
+
+# 9.4 SCSS Loader
+  - create scss file in `client`
+    - mkdir `client/scss/`
+    - touch `styles.scss` & `_variables.scss`
+    - `@import ./_variables.scss` in `styles.scss`
+  - SCSS Loader Setup
+    - sass-loader
+	  - sass-loader converts `.scss` to `.css`
+	  - `npm i sass sass-loader -D`
+	- css-loader
+	  - css-loader resolves `@import~ and `url()` into `import/require()`
+	  - `npm i css-loader -D`
+    - style-loader(optional)
+	  - style-loader injects CSS into DOM(website)
+	  - `npm i style-loader -D`
+	- MiniCssExtractPlugin
+	  - mini-css-extract-plugin put css file in seperate folder
+	  - `npm i mini-css-extract-plugin -D`
+	  - `const MiniCssExtractPlugin = require("mini-css-extract-plugin)`(webpack.config.js)
+	  - `plugins: [new MiniCssExtractPlugin({filename: " "css/styles.css"})]`(webpack.config.js)
+  - Scss Loader
+	- test: /\.scss$/
+	- use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"]
+	  - to connect several loaders, starts with backwards
+  - apply assets into front-end
+    - `link(rel="stylesheet", href="/assets/css/styles.css")`
+
+# 9.6 개발환경 개선하기
+  - gitignore
+    - /assets
+  - dev scripts
+    - package.json
+	  - `dev:server: "nodemon"`
+	  - `dev:assets: "webpack"`
+	  - run additional console for continuous save process
+	- nodemon.json
+	  - `"exec": "babel-node src/init.js"`
+	  - `"ignore": [~]`
+	  : ignore save event for webpack-related stuff
+	  - `[~]`: `webpack.config.js` / `src/client/*` / `assets/*`
+	- webpack.config.js
+	  - `watch: true`
+	  : watch save event for webpack
+	  - `output.clean: true`
+	  : clean `/assets` when process start
 
 # 5.6 CSS
   - makeshift: `MVP.CSS`

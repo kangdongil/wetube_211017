@@ -7,7 +7,8 @@
     "url": "git+https://github.com/kangdongil/wetube_211017.git"
   },
   "scripts": {
-    "dev": "nodemon --exec babel-node src/init.js"
+    "dev:server": "nodemon",
+    "dev:assets": "webpack"
   },
   "author": "",
   "license": "MIT",
@@ -30,7 +31,15 @@
     "@babel/core": "^7.15.8",
     "@babel/node": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.5.1",
     "dotenv": "^10.0.0",
-    "nodemon": "^2.0.13"
+    "mini-css-extract-plugin": "^2.4.5",
+    "nodemon": "^2.0.13",
+    "sass": "^1.43.5",
+    "sass-loader": "^12.3.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.64.4",
+    "webpack-cli": "^4.9.1"
   }
 }
