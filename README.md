@@ -1154,4 +1154,23 @@
 
 # 5.6 CSS
   - makeshift: `MVP.CSS`
-  	- `<link rel="stylesheet" href="https://unpkg.com/mvp.css">`
+  	- `<link rel="stylesheet", href="https://unpkg.com/mvp.css">`
+  - create `partials/headers`
+  - import fontawesome
+    - `<link rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"`
+  - home icon(`i.fab.fa-youtube`)
+  - styles.scss
+    - config / components / screens / defaults
+	- config
+	  - config/_variables.scss
+	  - config/_reset.scss
+	  : [Link](https://meyerweb.com/eric/tools/css/reset/)
+	- components(=partials/mixins)
+	- screens(webpage)
+	- defaults
+	  - custom anchor reset
+	  : a {color: inherit; text-decoration: none;}
+	  - font-family
+	  : `font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;`
+	  - fontcolor & background
