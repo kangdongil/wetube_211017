@@ -4,7 +4,7 @@ block content
 	if loggedInUser.avatarUrl
 		img(src=`${loggedInUser.noPasswordAccount ? "" : "/"}` + loggedInUser.avatarUrl, width="100", height="100")
 	h4 Edit Profile
-	form(method="POST", enctype="multipart/form-data")
+	form(method="POST", enctype="multipart/form-data").edit-profile__form
 		label(for="avatar") Avatar
 		input(type="file", accept="image/*", id="avatar", name="avatar")
 		input(type="email", required, name="email", placeholder="Email", value=loggedInUser.email)
@@ -13,5 +13,5 @@ block content
 		input(type="text", required, name="location", placeholder="Location", value=loggedInUser.location)
 		input(type="submit", value="Update Profile")
 		if !loggedInUser.noPasswordAccount
-			hr
+			div.edit-profile__password
 			a(href="edit/password") Change Password &rarr;
